@@ -2,6 +2,13 @@
 require "lib/encoded_polyline/core"
 require 'benchmark'
 
+if ARGV.empty?
+	seed = (rand * 1000000).to_i.abs
+else
+	seed = ARGV[0].to_i
+end
+srand seed
+
 def rsign
   (rand(2) == 1) ? -1 : 1
 end
@@ -18,12 +25,9 @@ random_walk_text = EncodedPolyline.encode_points(random_walk)
 points_length = random_walk.inspect.gsub(' ','').to_s.length
 compressed_length = random_walk_text.length
 
-puts "Raw length(JSON):\t#{points_length} characters"
-puts "Encoded length:\t\t#{compressed_length} characters"
-
-puts "Compression ratio:\t#{compressed_length.to_f / points_length}"
-
-puts "Static map:\t\thttp://maps.googleapis.com/maps/api/staticmap?size=400x400&sensor=false&path=weight:3%7Ccolor:blue%7Cenc:#{random_walk_text}"
+puts random_walk.join(" ")
+puts random_walk_text
+puts seed
 puts "\n"
 
 Benchmark.bm(20) do |x|
